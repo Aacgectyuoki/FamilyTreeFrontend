@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Tree from './components/Tree'; // Placeholder for the family tree visualization
+import Tree from './components/Tree';
+import './styles.css';
 
-const App = () => {
-  const [language, setLanguage] = useState('en');
-
-  // Toggle between English and Arabic
-  const toggleLanguage = () => {
-    setLanguage(prev => (prev === 'en' ? 'ar' : 'en'));
-  };
-
-  return (
-    <Router>
-      <Header toggleLanguage={toggleLanguage} />
-      <Routes>
-        <Route path="/" element={<React.Fragment><Tree language={language} /></React.Fragment>} />
-        {/* Add more routes as needed */}
-      </Routes>
-    </Router>
-  );
-};
+const App = () => (
+  <Router>
+    <Header toggleLanguage={() => { /* implement toggle language functionality here */ }} />
+    <Routes>
+      <Route path="/" element={<h1>Welcome to the Family Tree</h1>} />
+      <Route path="/tree" element={<Tree />} />
+    </Routes>
+  </Router>
+);
 
 export default App;
