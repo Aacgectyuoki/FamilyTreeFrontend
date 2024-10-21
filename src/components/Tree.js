@@ -3,8 +3,11 @@ import axios from 'axios';
 import FamilyNode from './FamilyNode';
 
 const Tree = () => {
-  const [members, setMembers] = useState<{ _id: string; [key: string]: any }[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [members, setMembers] = useState([]);
+  const [error, setError] = useState(null);
+
+  // const [members, setMembers] = useState<{ _id: string; [key: string]: any }[]>([]);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFamilyMembers = async () => {
