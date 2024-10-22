@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+
+.tree-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.node {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 8px;
+  text-align: center;
+  width: 200px;
+}
+
+.connections {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.line {
+  height: 2px;
+  background-color: black;
+  width: 50px;
+  margin: 0 10px;
+}

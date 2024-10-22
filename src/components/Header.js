@@ -1,17 +1,19 @@
-import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-const Header = ({ toggleLanguage }) => {
+const Header = () => {
+  const { i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'ar' : 'en';
+    i18n.changeLanguage(newLang);
+  };
+
   return (
-    <header>
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/tree">The Tree</Link></li>
-        </ul>
-        <button onClick={toggleLanguage}>Toggle Language</button>
-      </nav>
-    </header>
+    <div>
+      <Link to="/">Home</Link> | <Link to="/tree">The Tree</Link>
+      <button onClick={toggleLanguage}>Toggle Language</button>
+    </div>
   );
 };
 
