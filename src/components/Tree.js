@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import FamilyNode from './FamilyNode';
+import FamilyTree from './FamilyTree'; // Import FamilyTree component
 
 const Tree = () => {
-  const [members, setMembers] = useState([]);
-  const [error, setError] = useState(null);
+  const [members, setMembers] = useState([]); // State for family members
+  const [error, setError] = useState(null); // State for error handling
 
-  // const [members, setMembers] = useState<{ _id: string; [key: string]: any }[]>([]);
-  // const [error, setError] = useState<string | null>(null);
-
+  // Fetch family members from the backend API
   useEffect(() => {
     const fetchFamilyMembers = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/family');
-        setMembers(response.data);
+        setMembers(response.data); // Update state with fetched data
         setError(null); // Clear any previous errors
       } catch (error) {
         console.error('Error fetching family members:', error);
@@ -21,15 +19,17 @@ const Tree = () => {
       }
     };
 
-    fetchFamilyMembers();
+    fetchFamilyMembers(); // Call the fetch function
   }, []);
 
   return (
     <div className="tree-container">
-      {error && <div className="error-message">{error}</div>}
-      {members.map(member => (
-        <FamilyNode key={member._id} member={member} />
-      ))}
+      {error && <div className="error-message">{error}</div>} 
+      {members.length > 0 ? ( 
+        <FamilyTree members={members} /> // Pass members to FamilyTree component
+      ) : (
+        <p>Loading family members...</p> // Display loading message
+      )}
     </div>
   );
 };

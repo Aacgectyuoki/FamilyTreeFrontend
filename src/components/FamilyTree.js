@@ -1,34 +1,115 @@
-import React from 'react';
+// import React, { useEffect, useState, useRef } from 'react';
+// import Tree from 'react-d3-tree';
 
-const TreeNode = ({ member, children = [] }) => (
-  <div className="node">
-    <strong>{member.name}</strong>
-    <br />
-    {member.birthYear} - {member.isAlive ? 'Present' : member.deathYear}
+// const containerStyles = {
+//   width: '100%',
+//   height: '100vh',
+// };
 
-    {children.length > 0 && (
-      <div className="children">
-        <div className="connections">
-          {children.map((child) => (
-            <React.Fragment key={child._id}>
-              <div className="line"></div>
-              <TreeNode member={child} children={child.children || []} />
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-    )}
-  </div>
-);
+// const transformData = (members) => {
+//   const map = new Map();
+//   members.forEach((member) =>
+//     map.set(member._id, { ...member, children: [] })
+//   );
+
+//   const roots = [];
+//   members.forEach((member) => {
+//     if (member.parents.length > 0) {
+//       member.parents.forEach((parentId) => {
+//         const parent = map.get(parentId);
+//         parent.children.push(map.get(member._id));
+//       });
+//     } else {
+//       roots.push(map.get(member._id));
+//     }
+//   });
+
+//   return roots;
+// };
+
+// const FamilyTree = ({ members }) => {
+//   const treeContainer = useRef(null);
+//   const [data, setData] = useState([]);
+
+//   useEffect(() => {
+//     const transformedData = transformData(members);
+//     setData(transformedData);
+//   }, [members]);
+
+//   return (
+//     <div style={containerStyles} ref={treeContainer}>
+//       {data.length > 0 ? (
+//         <Tree
+//           data={data}
+//           orientation="vertical"
+//           translate={{ x: 200, y: 50 }}
+//           pathFunc="elbow"
+//           zoomable={true}
+//           separation={{ siblings: 1.5, nonSiblings: 2 }}
+//           nodeSize={{ x: 200, y: 150 }}
+//         />
+//       ) : (
+//         <p>Loading family tree...</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default FamilyTree;
+
+
+import React, { useState, useEffect, useRef } from 'react';
+import Tree from 'react-d3-tree';
+
+const containerStyles = {
+  width: '100%',
+  height: '100vh',
+};
 
 const FamilyTree = ({ members }) => {
-  const roots = members.filter((member) => !member.parents.length);
+  const treeContainer = useRef(null);
+  const [data, setData] = useState([]);
+
+  const transformData = (members) => {
+    const map = new Map();
+    members.forEach((member) =>
+      map.set(member._id, { ...member, children: [] })
+    );
+
+    const roots = [];
+    members.forEach((member) => {
+      if (member.parents.length > 0) {
+        member.parents.forEach((parentId) => {
+          const parent = map.get(parentId);
+          if (parent) parent.children.push(map.get(member._id));
+        });
+      } else {
+        roots.push(map.get(member._id));
+      }
+    });
+
+    return roots;
+  };
+
+  useEffect(() => {
+    setData(transformData(members));
+  }, [members]);
+
+  const handleNodeClick = (nodeData) => {
+    alert(`Clicked on: ${nodeData.name}`);
+  };
 
   return (
-    <div className="tree-container">
-      {roots.map((root) => (
-        <TreeNode key={root._id} member={root} children={root.children || []} />
-      ))}
+    <div style={containerStyles} ref={treeContainer}>
+      <Tree
+        data={data}
+        orientation="vertical"
+        translate={{ x: 200, y: 50 }}
+        pathFunc="elbow"
+        zoomable={true}
+        separation={{ siblings: 1.5, nonSiblings: 2 }}
+        onNodeClick={(node) => handleNodeClick(node.data)}
+      />
     </div>
   );
 };
