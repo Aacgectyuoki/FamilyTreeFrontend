@@ -1,0 +1,24 @@
+.tree-container {
+    background: #f8f9fa; /* Background similar to Synium's light theme */
+  }
+  
+  .node circle {
+    fill: #ffa500; /* Orange color similar to Synium */
+    stroke: #333;
+    stroke-width: 3px;
+  }
+  
+  .node text {
+    font-size: 1em;
+    fill: #333;
+  }
+  
+  .line {
+    stroke: #999;
+    stroke-width: 2px;
+  }
+  
+  .children .line {
+    stroke: #000;
+  }
+  

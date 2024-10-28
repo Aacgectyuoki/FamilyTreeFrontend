@@ -4,28 +4,25 @@ const FamilyNode = ({ member }) => {
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpand = () => {
-    if (member.children && member.children.length > 0) {
-      setExpanded(!expanded);
-    }
+    if (member.children?.length) setExpanded(!expanded);
   };
 
   const getClassNames = () => {
-    if (member.gender === 'male') {
-      return member.isAlive ? 'light-green' : 'dark-green';
-    } else if (member.gender === 'female') {
-      return member.isAlive ? 'pink' : 'dark-pink';
-    }
+    if (member.gender === 'male') return member.isAlive ? 'light-green' : 'dark-green';
+    if (member.gender === 'female') return member.isAlive ? 'pink' : 'dark-pink';
   };
 
   return (
     <div className={`family-node ${getClassNames()}`} onClick={toggleExpand}>
       <div className="person-card">
         <h4>{member.name}</h4>
-        <p>{member.birthYear || 'Unknown'} - {member.deathYear || 'Present'}</p>
+        <p>
+          {member.birthYear || 'Unknown'} - {member.isAlive ? 'Present' : member.deathYear || 'Unknown'}
+        </p>
       </div>
       {expanded && member.children && (
         <div className="children">
-          {member.children.map(child => (
+          {member.children.map((child) => (
             <FamilyNode key={child._id} member={child} />
           ))}
         </div>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +12,7 @@ const Header = () => {
 
   return (
     <div>
-      <Link to="/">Home</Link> | <Link to="/tree">The Tree</Link>
+      <Link to="/">Home</Link> | <Link to="/tree">Family Tree</Link>
       <button onClick={toggleLanguage}>Toggle Language</button>
     </div>
   );
