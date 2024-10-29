@@ -1,97 +1,71 @@
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import FamilyTree from './FamilyTreeSynium'; // Import FamilyTree component
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next'; // Hook for translations
+import FamilyTreeSynium from './FamilyTreeSynium';
 
-// const Tree = () => {
-//   const [members, setMembers] = useState([]); // State for family members
-//   const [error, setError] = useState(null); // State for error handling
+/** @typedef {Object} FamilyMember */
+/** @property {{ en: string, ar: string }} name */
 
-//   // Fetch family members from the backend API
-//   useEffect(() => {
-//     const fetchFamilyMembers = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:5000/api/family');
-//         setMembers(response.data); // Update state with fetched data
-//         setError(null); // Clear any previous errors
-//       } catch (error) {
-//         console.error('Error fetching family members:', error);
-//         setError('Error fetching family members. Please try again later.');
-//       }
-//     };
-
-//     fetchFamilyMembers(); // Call the fetch function
-//   }, []);
-
-//   return (
-//     <div className="tree-container">
-//       {error && <div className="error-message">{error}</div>} 
-//       {members.length > 0 ? ( 
-//         <FamilyTree members={members} /> // Pass members to FamilyTree component
-//       ) : (
-//         <p>Loading family members...</p> // Display loading message
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Tree;
-
-// Tree.js
-import React, { useEffect, useState } from 'react';
-import FamilyTreeSynium from './FamilyTreeSynium'; // Import the Synium family tree component
-
-// Define the interface for a family member
-/**
- * @typedef {Object} FamilyMember
- * @property {string} _id
- * @property {string} name
- * @property {number} birthYear
- * @property {boolean} isAlive
- * @property {string} gender
- * @property {string[]} parents
- * @property {FamilyMember[]} children
- */
+const dummyFamilyMembers = [
+  {
+    _id: '1',
+    name: { en: 'John Doe', ar: 'جون دو' },
+    birthYear: 1970,
+    isAlive: true,
+    gender: 'male',
+    parents: [],
+    children: ['2'],
+  },
+  {
+    _id: '2',
+    name: { en: 'Jane Doe', ar: 'جين دو' },
+    birthYear: 1980,
+    isAlive: true,
+    gender: 'female',
+    parents: ['1'],
+    children: ['3', '4'],
+  },
+  {
+    _id: '3',
+    name: { en: 'Max Doe', ar: 'ماكس دو' },
+    birthYear: 1996,
+    isAlive: true,
+    gender: 'male',
+    parents: ['2'],
+    children: [],
+  },
+  {
+    _id: '4',
+    name: { en: 'Alice Doe', ar: 'أليس دو' },
+    birthYear: 1997,
+    isAlive: true,
+    gender: 'female',
+    parents: ['2'],
+    children: [],
+  },
+];
 
 const Tree = () => {
-  const [members, setMembers] = useState(/** @type {FamilyMember[]} */([])); // State for family members
-  const [error, setError] = useState(null); // State for error handling
+  const { t, i18n } = useTranslation(); // Translation hook
+  const [members, setMembers] = useState([]);
 
-  // Dummy data for testing
-  const dummyFamilyMembers = [
-    {
-      _id: "1",
-      name: "John Doe",
-      birthYear: 1970,
-      isAlive: true,
-      gender: "male",
-      parents: [],
-      children: [
-        {
-          _id: "2",
-          name: "Jane Doe",
-          birthYear: 2000,
-          isAlive: true,
-          gender: "female",
-          parents: ["1"],
-          children: [],
-        },
-      ],
-    },
-  ];
-
-  // UseEffect to load the dummy data
   useEffect(() => {
-    console.log("Using dummy data for testing");
     setMembers(dummyFamilyMembers);
   }, []);
 
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'ar' : 'en';
+    i18n.changeLanguage(newLang)
+      .then(() => console.log(`Language changed to ${newLang}`))
+      .catch((err) => console.error('Language change error:', err));
+  };
+
   return (
     <div className="tree-container">
-      {error && <div className="error-message">{error}</div>}
+      <button onClick={toggleLanguage}>{t('toggle_language')}</button>
       {members.length > 0 ? (
         <FamilyTreeSynium members={members} />
       ) : (
-        <p>Loading family members...</p>
+        <p>{t('loading_message')}</p>
       )}
     </div>
   );
