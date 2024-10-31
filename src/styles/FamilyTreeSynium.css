@@ -1,37 +1,114 @@
+/* Container for the entire tree */
 .tree-container {
-  padding: 20px;
-}
-
-.family-node {
   display: flex;
-  align-items: center;
   justify-content: center;
-  border-radius: 15px;
-  background-color: #e0ffe0; /* Light green background for nodes */
-  margin: 10px;
-  padding: 10px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  align-items: flex-start;
+  background-color: #f8f9fa;
+  padding: 20px;
+  overflow-x: auto;
 }
 
-.family-node.male {
-  background-color: #ADD8E6; /* Light blue for males */
-}
-
-.family-node.female {
-  background-color: #FFC0CB; /* Pink for females */
-}
-
-.marriage-box {
+/* Family group container with rounded corners */
+.family-group {
   display: flex;
-  justify-content: space-evenly;
-  background-color: #f5f5f5;
-  border-radius: 15px;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
   padding: 15px;
   margin: 15px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #e6f0fa;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 220px;
 }
 
-.line {
-  stroke: red;
-  stroke-width: 2px;
+/* Styling for spouse pair in a family group */
+.spouse-pair {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+/* Individual person circle within spouse pairs */
+.person-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 3px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.person-circle:hover {
+  border-color: #4a90e2;
+  transform: scale(1.1);
+}
+
+/* Gender colors */
+.male {
+  background-color: #a8dadc;
+}
+
+.female {
+  background-color: #fbb6ce;
+}
+
+/* Name and date text styling */
+.person-info {
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  margin-top: 5px;
+}
+
+.birth-death-dates {
+  font-size: 0.85em;
+  color: #666;
+}
+
+/* Horizontal line to represent spouse connection */
+.spouse-line {
+  height: 2px;
+  width: 60px;
+  background-color: #4a90e2;
+  margin: 0 5px;
+}
+
+/* Children container */
+.children-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+/* Individual child box styling */
+.child-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100px;
+}
+
+.child-box .person-circle {
+  width: 40px;
+  height: 40px;
+}
+
+/* Line from parent to children */
+.connection-line {
+  width: 2px;
+  height: 40px;
+  background-color: #4a90e2;
+  margin: 0 auto;
 }

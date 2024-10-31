@@ -8,12 +8,8 @@
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  background-color: #fff;
 }
-
-.light-green { background-color: #90EE90; }
-.dark-green { background-color: #006400; color: white; }
-.pink { background-color: #FFB6C1; }
-.dark-pink { background-color: #FF1493; color: white; }
 
 .children {
   margin-left: 30px;
