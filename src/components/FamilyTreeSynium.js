@@ -1,15 +1,14 @@
 import React, { Component, createRef } from 'react';
 import Tree from 'react-d3-tree';
-import { withTranslation } from 'react-i18next';
-import '../styles/FamilyTreeSynium.css';
+import '../styles/FamilyTreeSynium.css'; // Custom styles for the tree layout.
 
 const containerStyles = {
   width: '100%',
   height: '100vh',
-  background: '#f8f9fa',
+  background: '#f8f9fa', // Synium-like light background
 };
 
-const nodeSize = { x: 300, y: 200 };
+const nodeSize = { x: 300, y: 200 }; // Adjust node dimensions for better spacing.
 
 class FamilyTreeSynium extends Component {
   constructor(props) {
@@ -17,28 +16,20 @@ class FamilyTreeSynium extends Component {
     this.treeContainer = createRef();
     this.state = {
       data: [],
-      expandedNodes: {}, // Track which nodes are expanded to show children
     };
   }
 
   componentDidMount() {
-    const validatedMembers = this.validateMembers(this.props.members);
-    this.setState({ data: this.transformData(validatedMembers) });
+    this.setState({ data: this.transformData(this.props.members) });
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.members !== this.props.members) {
-      const validatedMembers = this.validateMembers(this.props.members);
-      this.setState({ data: this.transformData(validatedMembers) });
+      this.setState({ data: this.transformData(this.props.members) });
     }
   }
 
-  validateMembers = (members) =>
-    members.map((member) => ({
-      ...member,
-      gender: member.gender || 'unknown',
-    }));
-
+  // Transform members to hierarchical data format
   transformData = (members) => {
     const map = new Map();
     members.forEach((member) =>
@@ -46,6 +37,7 @@ class FamilyTreeSynium extends Component {
     );
 
     const roots = [];
+
     members.forEach((member) => {
       if (member.parents && member.parents.length > 0) {
         member.parents.forEach((parentId) => {
@@ -62,36 +54,26 @@ class FamilyTreeSynium extends Component {
     return roots;
   };
 
-  toggleChildren = (nodeId) => {
-    this.setState((prevState) => ({
-      expandedNodes: {
-        ...prevState.expandedNodes,
-        [nodeId]: !prevState.expandedNodes[nodeId],
-      },
-    }));
-  };
-
   renderCustomNode = ({ nodeDatum, toggleNode }) => {
-    const { t, i18n } = this.props;
-    const genderColor =
-      nodeDatum.gender === 'male' ? '#ADD8E6' : nodeDatum.gender === 'female' ? '#FFC0CB' : '#D3D3D3';
+    const spouses = nodeDatum.spouses || [];
+    const people = [nodeDatum, ...spouses.map(spouseId => this.props.members.find(member => member._id === spouseId))];
 
     return (
       <g>
-        <circle r={20} onClick={() => this.toggleChildren(nodeDatum._id)} fill={genderColor} />
-        <text fill="black" strokeWidth="1" x="25">
-          {nodeDatum.name[i18n.language]}
-        </text>
-        {nodeDatum.birthYear && (
-          <text fill="gray" x="25" dy="20">
-            {`${nodeDatum.birthYear} - ${nodeDatum.isAlive ? t('present') : nodeDatum.deathYear || ''}`}
-          </text>
-        )}
-        {nodeDatum.spouses && nodeDatum.spouses.length > 0 && (
-          <text fill="black" x="25" dy="40">
-            {t('spouse')}: {nodeDatum.spouses.map((id) => this.props.members.find((m) => m._id === id).name[i18n.language]).join(', ')}
-          </text>
-        )}
+        <rect width="250" height="150" x="-125" y="-75" fill="#fff" stroke="#000" strokeWidth="1" />
+        {people.map((person, index) => (
+          <g key={person._id} transform={`translate(${index * 80 - (people.length - 1) * 40}, 0)`}>
+            <circle r={20} fill={person.gender === 'male' ? '#ADD8E6' : '#FFC0CB'} />
+            <text fill="black" x="0" y="-30" textAnchor="middle">
+              {person.name.en}
+            </text>
+            {person.birthYear && (
+              <text fill="gray" x="0" y="40" textAnchor="middle">
+                {`${person.birthYear} - ${person.isAlive ? 'Present' : person.deathYear}`}
+              </text>
+            )}
+          </g>
+        ))}
       </g>
     );
   };
@@ -100,7 +82,8 @@ class FamilyTreeSynium extends Component {
     const { data } = this.state;
 
     if (!data.length) {
-      return <div>{this.props.t('loading_message')}</div>;
+      console.error("Data is undefined or empty");
+      return <div>Data is undefined or empty</div>;
     }
 
     return (
@@ -109,7 +92,7 @@ class FamilyTreeSynium extends Component {
           data={data}
           orientation="vertical"
           translate={{ x: 500, y: 100 }}
-          pathFunc="elbow"
+          pathFunc="elbow" // Use elbow links for curves.
           nodeSize={nodeSize}
           separation={{ siblings: 1, nonSiblings: 2 }}
           zoomable
@@ -120,4 +103,4 @@ class FamilyTreeSynium extends Component {
   }
 }
 
-export default withTranslation()(FamilyTreeSynium);
+export default FamilyTreeSynium;
