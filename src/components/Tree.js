@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
+import axios from 'axios'; // Ensure axios is imported
 import FamilyTreeSynium from './FamilyTreeSynium';
+import UploadGedcom from './UploadGedcom';
 
 // Define family members with relationships
 const dummyFamilyMembers = [
@@ -136,25 +138,41 @@ const dummyFamilyMembers = [
 ];
 
 const Tree = () => {
-  const { t, i18n } = useTranslation(); 
+  const { t, i18n } = useTranslation();
   const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Function to fetch family members from the backend
+  const fetchFamilyMembers = async () => {
+    try {
+      const response = await axios.get('/api/family');
+      setMembers(response.data);
+    } catch (error) {
+      console.error("Error fetching family members:", error);
+      setMembers(dummyFamilyMembers); // Use dummy data if fetch fails
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setMembers(dummyFamilyMembers); // Set initial family members data
+    fetchFamilyMembers();
   }, []);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'ar' : 'en';
-    i18n.changeLanguage(newLang); // Toggle between English and Arabic
+    i18n.changeLanguage(newLang);
   };
 
   return (
     <div className="tree-container">
+      <UploadGedcom onUploadSuccess={fetchFamilyMembers} />
+
       <button onClick={toggleLanguage}>{t('toggle_language')}</button>
-      {members.length > 0 ? (
-        <FamilyTreeSynium members={members} /> // Pass family data to tree component
-      ) : (
+      {loading ? (
         <p>{t('loading_message')}</p>
+      ) : (
+        <FamilyTreeSynium members={members} /> // Render tree with family data
       )}
     </div>
   );
